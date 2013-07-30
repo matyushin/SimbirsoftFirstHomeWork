@@ -1,0 +1,6 @@
+F:\Учеба\Курсы\Simbirsoft\HomeWork1\HomeWork1\bin\Debug\HomeWork1.exe.config
+F:\Учеба\Курсы\Simbirsoft\HomeWork1\HomeWork1\bin\Debug\HomeWork1.exe
+F:\Учеба\Курсы\Simbirsoft\HomeWork1\HomeWork1\bin\Debug\HomeWork1.pdb
+F:\Учеба\Курсы\Simbirsoft\HomeWork1\HomeWork1\obj\Debug\HomeWork1.csprojResolveAssemblyReference.cache
+F:\Учеба\Курсы\Simbirsoft\HomeWork1\HomeWork1\obj\Debug\HomeWork1.exe
+F:\Учеба\Курсы\Simbirsoft\HomeWork1\HomeWork1\obj\Debug\HomeWork1.pdb
