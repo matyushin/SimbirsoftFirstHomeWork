@@ -6,10 +6,12 @@ namespace HomeWork1
     public class Cluster : IEquatable<Cluster>
     {
         public List<Machine> Machinery;
+        public List<KeyValuePair<int, int>> defferences;
 
         public Cluster()
         {
             Machinery = new List<Machine>();
+            defferences = new List<KeyValuePair<int, int>>();
         }
 
         public Cluster(List<Machine> curCluster)
