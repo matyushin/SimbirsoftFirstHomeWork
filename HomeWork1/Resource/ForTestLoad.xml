@@ -1,0 +1,29 @@
+﻿<?xml version="1.0"?>
+<Cluster xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Machinery>
+    <Machine>
+      <ProcessorName>Intel Core i5</ProcessorName>
+      <CoresNumber>2</CoresNumber>
+      <CpuSpeed>3000 MHz</CpuSpeed>
+      <Ram>DDR3 4Gb</Ram>
+      <Hdd>SSD 120Gb</Hdd>
+      <VideoSystemType>Intel HD4500</VideoSystemType>
+    </Machine>
+    <Machine>
+      <ProcessorName>AMD 3200+</ProcessorName>
+      <CoresNumber>1</CoresNumber>
+      <CpuSpeed>3000 MHz</CpuSpeed>
+      <Ram>DDR1 1Gb</Ram>
+      <Hdd>SATA 80Gb</Hdd>
+      <VideoSystemType>NVidea 6600 128Mb</VideoSystemType>
+    </Machine>
+    <Machine>
+      <ProcessorName>Intel Core i3</ProcessorName>
+      <CoresNumber>2</CoresNumber>
+      <CpuSpeed>2000 MHz</CpuSpeed>
+      <Ram>DDR3 3Gb</Ram>
+      <Hdd>SATA2 320Gb</Hdd>
+      <VideoSystemType>ATI Radeon HD5650 512Mb</VideoSystemType>
+    </Machine>
+  </Machinery>
+</Cluster>

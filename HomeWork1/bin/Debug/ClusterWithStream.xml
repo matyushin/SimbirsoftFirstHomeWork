@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<Cluster xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Machinery>
+    <Machine>
+      <ProcessorName>Intel Core2Duo E8400</ProcessorName>
+      <CoresNumber>2</CoresNumber>
+      <CpuSpeed>3000 MHz</CpuSpeed>
+      <Ram>DDR2 2Gb</Ram>
+      <Hdd>SATA2 500Gb</Hdd>
+      <VideoSystemType>NVidea GTS-250 512Mb</VideoSystemType>
+    </Machine>
+    <Machine>
+      <ProcessorName>Intel Core i3</ProcessorName>
+      <CoresNumber>2</CoresNumber>
+      <CpuSpeed>2000 MHz</CpuSpeed>
+      <Ram>DDR3 3Gb</Ram>
+      <Hdd>SATA2 320Gb</Hdd>
+      <VideoSystemType>ATI Radeon HD5650 512Mb</VideoSystemType>
+    </Machine>
+  </Machinery>
+</Cluster>

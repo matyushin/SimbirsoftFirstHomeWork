@@ -12,6 +12,9 @@ namespace HomeWork1
 {
     class Program
     {
+        private const string ConstFileNameWithLinq = "ClusterWithLinq.xml";
+        private const string ConstFileNameWithStream = "ClusterWithStream.xml";
+
         static void Main(string[] args)
         {
             try
@@ -88,9 +91,9 @@ namespace HomeWork1
             outputFileStream.Close();
         }
 
-        private static Cluster LoadWithLinqToXml()
+        private static Cluster LoadWithLinqToXml(string fileName)
         {
-            const string fileName = "ClusterWithLinq.xml"; //Directory.GetCurrentDirectory() + @"\clusterWithLinq.xml";
+            //const string fileName = "ClusterWithLinq.xml"; //Directory.GetCurrentDirectory() + @"\clusterWithLinq.xml";
             var inputFileStream = GetFileStream(fileName, FileMode.Open);//new FileStream(fileName, FileMode.Open);
 
             var xDoc = XDocument.Load(inputFileStream);
@@ -143,10 +146,10 @@ namespace HomeWork1
             outputFileStream.Close();
         }
 
-        private static Cluster LoadWithStream()
+        private static Cluster LoadWithStream(string fileName)
         {
             var xmlser = new XmlSerializer(typeof(Cluster));
-            const string fileName = @"ClusterWithStream.xml"; //Directory.GetCurrentDirectory() + @"\clusterWithStream.xml";
+            //const string fileName = @"ClusterWithStream.xml"; //Directory.GetCurrentDirectory() + @"\clusterWithStream.xml";
             var inputFileStream = GetFileStream(fileName, FileMode.Open);//new FileStream(fileName, FileMode.Open);
             var cluster = (Cluster)xmlser.Deserialize(inputFileStream);
             inputFileStream.Close();
@@ -210,17 +213,24 @@ namespace HomeWork1
             Console.Clear();
             foreach (var machine in cluster.Machinery)
             {
-                Console.WriteLine("Параметры компьютера: ");
-                Console.WriteLine("Модель процессора: " + machine.ProcessorName);
-                Console.WriteLine("Количество ядер: " + machine.CoresNumber);
-                Console.WriteLine("Частоту ядра процессора: " + machine.CpuSpeed);
-                Console.WriteLine("Тип и количество ОЗУ: " + machine.Ram);
-                Console.WriteLine("Тип и количество ПЗУ: " + machine.Hdd);
-                Console.WriteLine("Тип видеосистемы: " + machine.VideoSystemType);
-                Console.WriteLine();
-                Console.WriteLine("Нажмите любую клавишу чтобы продолжить...");
-                Console.ReadKey();
+                PrintMachineInfo(machine);
             }
+            Console.WriteLine("Нажмите любую клавишу чтобы продолжить...");
+            Console.ReadKey();
+        }
+
+        private static void PrintMachineInfo(Machine machine)
+        {
+            Console.WriteLine("Параметры компьютера: ");
+            Console.WriteLine("Модель процессора: " + machine.ProcessorName);
+            Console.WriteLine("Количество ядер: " + machine.CoresNumber);
+            Console.WriteLine("Частоту ядра процессора: " + machine.CpuSpeed);
+            Console.WriteLine("Тип и количество ОЗУ: " + machine.Ram);
+            Console.WriteLine("Тип и количество ПЗУ: " + machine.Hdd);
+            Console.WriteLine("Тип видеосистемы: " + machine.VideoSystemType);
+            Console.WriteLine();
+            //Console.WriteLine("Нажмите любую клавишу чтобы продолжить...");
+            //Console.ReadKey();
         }
     
         private static void Menu()
@@ -252,11 +262,31 @@ namespace HomeWork1
                         SaveWithLinqToXml(clusterWithLinq);
                         break;
                     case "3":
-                        clusterWithStream = LoadWithStream();
-                        clusterWithLinq = LoadWithLinqToXml();
-                        Console.WriteLine(CompareClusters(clusterWithStream, clusterWithLinq)
-                                              ? "Файлы одинаковы!"
-                                              : "Файлы различны!");
+                        clusterWithStream = LoadWithStream(ConstFileNameWithStream);
+                        clusterWithLinq = LoadWithLinqToXml(ConstFileNameWithLinq);
+
+                        if (CompareClusters(clusterWithStream, clusterWithLinq))
+                        {
+                            Console.WriteLine("Файлы одинаковы!");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Файлы различны!");
+                            Console.WriteLine();
+                            Console.WriteLine("Нажмите 1 чтобы увидеть различия или любую другую клавишу чтобы продолжить...");
+                            var action = Console.ReadLine();
+                            if (action == "1")
+                            {
+                                PrintTheDifferences(clusterWithStream, clusterWithLinq);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        //Console.WriteLine(CompareClusters(clusterWithStream, clusterWithLinq)
+                        //                      ? "Файлы одинаковы!"
+                        //                      : "Файлы различны!");
                         Console.WriteLine();
                         Console.WriteLine("Нажмите любую клавишу чтобы продолжить...");
                         Console.ReadKey();
@@ -301,9 +331,30 @@ namespace HomeWork1
             return false;
         }
 
+        private static void PrintTheDifferencesForFirstCluster(Cluster firCluster, Cluster secCluster, string message)
+        {
+            Console.WriteLine(message);
+            foreach (var machine in firCluster.Machinery)
+            {
+                var flag = false;
+                foreach (var machine1 in secCluster.Machinery)
+                {
+                    flag = machine.Equals(machine1);
+                }
+                if (!flag)
+                {
+                    Console.WriteLine();
+                    PrintMachineInfo(machine);
+                }
+            }
+        }
+
         private static void PrintTheDifferences(Cluster clusterWithStream, Cluster clusterWithLinq)
         {
-            
+            Console.Clear();
+            PrintTheDifferencesForFirstCluster(clusterWithStream, clusterWithLinq, "Узлы первого кластера без соответствия: ");
+            Console.WriteLine();
+            PrintTheDifferencesForFirstCluster(clusterWithLinq, clusterWithStream, "Узлы второго кластера без соответствия: ");
         }
     }
 
@@ -322,76 +373,6 @@ namespace HomeWork1
             const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
             var methodInfo = o.GetType().GetMethod(methodName, flags, null, new[] { o.GetType() }, new ParameterModifier[] { });
             return methodInfo;
-        }
-
-        [TestMethod]
-        public void TestMethod()
-        {
-            var instance = new Program();
-            var info = getPrivateMethod(instance, "GetFileStream");
-            Assert.AreNotEqual(info, null);
-
-            info = getPrivateMethod(instance, "LoadWithLinqToXml");
-            Assert.AreNotEqual(info, null);
-
-            info = getPrivateMethod(instance, "LoadWithStream");
-            Assert.AreNotEqual(info, null);
-
-            info = getPrivateMethod(instance, "CompareClusters");
-            Assert.AreNotEqual(info, null);
-        }
-
-        [TestMethod]
-        public void TestGetFileStream()
-        {
-            var instance = new Program();
-            var methodInfo = getPrivateMethod(instance, "GetFileStream");
-            var res = (Stream) methodInfo.Invoke(instance, new object[] {"ClusterWithStream.xml", FileMode.Open});
-            Assert.AreNotEqual(res, null);
-
-            res = (Stream) methodInfo.Invoke(instance, new object[] {"ClusterWithLinq.xml", FileMode.Open});
-            Assert.AreNotEqual(res, null);
-        }
-
-        [TestMethod]
-        public void TestLoadWithLinqToXml()
-        {
-            var instance = new Program();
-            var methodInfo = getPrivateMethod(instance, "LoadWithLinqToXml");
-            var res = (Cluster) methodInfo.Invoke(instance, null);
-            Assert.AreNotEqual(res, null);
-        }
-
-        [TestMethod]
-        public void TestLoadWithStream()
-        {
-            var instance = new Program();
-            var methodInfo = getPrivateMethod(instance, "LoadWithStream");
-            var res = (Cluster) methodInfo.Invoke(instance, null);
-            Assert.AreNotEqual(res, null);
-        }
-
-        [TestMethod]
-        public void TestCompareClusters()
-        {
-            var instance = new Program();
-            var methodInfo = getPrivateMethod(instance, "CompareClusters");
-
-            var listOfClusters = InitDefault();
-            var res =
-                (bool)
-                methodInfo.Invoke(instance, new object[] {listOfClusters.ElementAt(0), listOfClusters.ElementAt(1)});
-            Assert.AreEqual(res, true);
-
-            res =
-                (bool)
-                methodInfo.Invoke(instance, new object[] {listOfClusters.ElementAt(0), listOfClusters.ElementAt(2)});
-            Assert.AreNotEqual(res, true);
-
-            res =
-                (bool)
-                methodInfo.Invoke(instance, new object[] {listOfClusters.ElementAt(1), listOfClusters.ElementAt(2)});
-            Assert.AreEqual(res, false);
         }
 
         private List<Cluster> InitDefault()
@@ -418,6 +399,84 @@ namespace HomeWork1
             listOfClusters.Add(new Cluster(machinary3));
 
             return listOfClusters;
+        }
+
+        [TestMethod]
+        public void TestMethod()
+        {
+            var instance = new Program();
+            var info = getPrivateMethod(instance, "GetFileStream");
+            Assert.AreNotEqual(info, null);
+
+            info = getPrivateMethod(instance, "LoadWithLinqToXml");
+            Assert.AreNotEqual(info, null);
+
+            info = getPrivateMethod(instance, "LoadWithStream");
+            Assert.AreNotEqual(info, null);
+
+            info = getPrivateMethod(instance, "CompareClusters");
+            Assert.AreNotEqual(info, null);
+
+            info = getPublicMethod(new Cluster(), "Equals");
+            Assert.AreNotEqual(info, null);
+
+            info = getPublicMethod(new Machine(), "Equals");
+            Assert.AreNotEqual(info, null);
+        }
+
+        [TestMethod]
+        public void TestGetFileStream()
+        {
+            var instance = new Program();
+            var methodInfo = getPrivateMethod(instance, "GetFileStream");
+            var res = (Stream) methodInfo.Invoke(instance, new object[] {"ClusterWithStream.xml", FileMode.Open});
+            Assert.AreNotEqual(res, null);
+
+            res = (Stream) methodInfo.Invoke(instance, new object[] {"ClusterWithLinq.xml", FileMode.Open});
+            Assert.AreNotEqual(res, null);
+        }
+
+        [TestMethod]
+        public void TestLoadWithLinqToXml()
+        {
+            var instance = new Program();
+            var methodInfo = getPrivateMethod(instance, "LoadWithLinqToXml");
+
+            var res = (Cluster)methodInfo.Invoke(instance, new object[] { "ForTestLoad.xml" });
+            Assert.AreNotEqual(res, null);
+        }
+
+        [TestMethod]
+        public void TestLoadWithStream()
+        {
+            var instance = new Program();
+            var methodInfo = getPrivateMethod(instance, "LoadWithStream");
+
+            var res = (Cluster)methodInfo.Invoke(instance, new object[] { "ForTestLoad.xml" });
+            Assert.AreNotEqual(res, null);
+        }
+
+        [TestMethod]
+        public void TestCompareClusters()
+        {
+            var instance = new Program();
+            var methodInfo = getPrivateMethod(instance, "CompareClusters");
+
+            var listOfClusters = InitDefault();
+            var res =
+                (bool)
+                methodInfo.Invoke(instance, new object[] {listOfClusters.ElementAt(0), listOfClusters.ElementAt(1)});
+            Assert.AreEqual(res, true);
+
+            res =
+                (bool)
+                methodInfo.Invoke(instance, new object[] {listOfClusters.ElementAt(0), listOfClusters.ElementAt(2)});
+            Assert.AreNotEqual(res, true);
+
+            res =
+                (bool)
+                methodInfo.Invoke(instance, new object[] {listOfClusters.ElementAt(1), listOfClusters.ElementAt(2)});
+            Assert.AreEqual(res, false);
         }
     
         [TestMethod]
